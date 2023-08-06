@@ -2,22 +2,19 @@
 @section('content')
     <div class="container">
         <x-filters />
-
         <div class="card">
             <div class="card-body">
-                {{-- This Canvas is for the Chart --}}
-                <canvas id="barChart" width="800" height="400"></canvas>
+                <canvas id="bubbleChart" width="800" height="400"></canvas>
             </div>
         </div>
     </div>
 
     <script>
-        $(".bar_Menu").addClass('active');
         let chart;
 
         function getData() {
             $.ajax({
-                url: '/bar-chart-data',
+                url: 'bubble-chart-data',
                 method: 'GET',
                 dataType: 'json',
                 data: {
@@ -26,37 +23,43 @@
                     'to': $("#to").val(),
                 },
                 success: function(data) {
-                    const country = data.country;
-                    const countryData = data.countryData;
+                    const casesData = data.cases;
+                    const deathsData = data.deaths;
+                    const recoveriesData = data.recoveries;
+                    const bubbleSizes = data.bubbleSizes;
 
-                    const ctx = document.getElementById('barChart').getContext('2d');
+                    const bubbleData = bubbleSizes.map(function(size, index) {
+                        return {
+                            x: casesData[index],
+                            y: deathsData[index],
+                            r: size //Set the radius size for each bubble
+                        }
+                    });
+
+                    const ctx = document.getElementById('bubbleChart').getContext('2d');
+
+                    // check if the chart is already exist if exists then we have to destroy it first
 
                     if (chart) {
                         chart.destroy();
                     }
-
                     chart = new Chart(ctx, {
-                        type: 'bar',
+                        type: 'bubble',
                         data: {
-                            labels: ['Confirmed', 'Recovered', 'Deaths'],
                             datasets: [{
-                                label: `COVID-19 Statistics for ${country}`,
-                                data: [countryData.Confirmed, countryData.Recovered, countryData.Deaths],
-                                backgroundColor: ['rgb(255,99,132)', 'rgb(75,192,192)', 'rgb(54,162,235)'],
+                                lable: 'Cases vs Deaths',
+                                data: bubbleData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                                hoverBackgroundColor: 'rgba(234, 99, 132, 0.9)',
                                 borderWidth: 1,
+                                hoverBorderWidth: 2,
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
                         }
-                    });
-
+                    })
                 },
                 error: function(error) {
                     console.log(error);
@@ -66,6 +69,6 @@
 
         $(function() {
             getData();
-        });
+        })
     </script>
 @endsection

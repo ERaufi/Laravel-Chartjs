@@ -21,6 +21,11 @@ Route::get('/', function () {
 
 // This Route Return The View.
 Route::view('bar-chart', 'charts.bar-chart');
+Route::view('bubble-chart', 'charts.Bubble-Chart');
+
 
 // This Route Returns the data for bar chart AJAX
-Route::get('bar-chart-data', [CovidController::class, 'getBarChartData']);
+Route::controller(CovidController::class)->group(function () {
+    Route::get('bar-chart-data', 'getBarChartData');
+    Route::get('bubble-chart-data', 'getBubbleChartData');
+});

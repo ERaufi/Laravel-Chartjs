@@ -31,4 +31,36 @@ class CovidController extends Controller
 
         return response()->json(['country' => $country, 'countryData' => $countryData]);
     }
+
+
+    public function getBubbleChartData(Request $request)
+    {
+        $data = Covid::where('country_id', $request->country)
+            // use When for filtering by date
+            ->when($request->from, function ($query) use ($request) {
+                return $query->whereDate('date', '>=', $request->from);
+            })
+            ->when($request->to, function ($query) use ($request) {
+                return $query->whereDate('date', '<=', $request->to);
+            })
+            ->orderBy('date')
+            ->limit(50)
+            ->get();
+
+        // start Getting the Bubble Size
+        $totalCases = $data->pluck('Active');
+        $totalCasesArray = $totalCases->toArray();
+        $maxTotalCases = max($totalCasesArray);
+        $bubleSizes = $totalCases->map(function ($cases) use ($maxTotalCases) {
+            return ($cases / $maxTotalCases) * 25;
+        });
+
+        // return the data as json
+        return response()->json([
+            'cases' => $data->pluck('Confirmed'),
+            'deaths' => $data->pluck('Deaths'),
+            'recoveries' => $data->pluck('Recovered'),
+            'bubbleSizes' => $bubleSizes->values(),
+        ]);
+    }
 }
