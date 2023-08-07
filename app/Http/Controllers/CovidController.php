@@ -63,4 +63,25 @@ class CovidController extends Controller
             'bubbleSizes' => $bubleSizes->values(),
         ]);
     }
+
+    public function getDoughnutChartData(Request $request)
+    {
+        $data = Covid::where('country_id', $request->country)
+            // use When for filtering by date
+            ->when($request->from, function ($query) use ($request) {
+                return $query->whereDate('date', '>=', $request->from);
+            })
+            ->when($request->to, function ($query) use ($request) {
+                return $query->whereDate('date', '<=', $request->to);
+            })
+            ->select('Confirmed', 'Deaths', 'Recovered')
+            ->orderBy('date', 'desc')
+            ->first();
+
+        return response()->json(['data' => [
+            $data->Confirmed,
+            $data->Recovered,
+            $data->Deaths
+        ]]);
+    }
 }

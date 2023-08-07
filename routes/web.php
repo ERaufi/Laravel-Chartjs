@@ -22,10 +22,12 @@ Route::get('/', function () {
 // This Route Return The View.
 Route::view('bar-chart', 'charts.bar-chart');
 Route::view('bubble-chart', 'charts.Bubble-Chart');
+Route::view('/doughnut-chart', 'charts.Doughnut-Chart');
 
 
 // This Route Returns the data for bar chart AJAX
 Route::controller(CovidController::class)->group(function () {
     Route::get('bar-chart-data', 'getBarChartData');
     Route::get('bubble-chart-data', 'getBubbleChartData');
+    Route::get('doughnut-chart-data', 'getDoughnutChartData');
 });
