@@ -12,9 +12,11 @@ class filters extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public $showContries;
+    public function __construct($showContries)
     {
         //
+        $this->showContries = $showContries;
     }
 
     /**

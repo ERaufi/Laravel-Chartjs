@@ -2,44 +2,43 @@
 
 @section('content')
     <div class="container">
-        <x-filters :showContries='true'/>
+        <x-filters :showContries='false' />
         <div class="card">
             <div class="card-body">
-                <canvas id="doughnutChart" width="800" height="400"></canvas>
+                <canvas id="horizontalBarChart" width="800" height="400"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Bar Chart Script -->
     <script>
         let chart;
 
         function getData() {
             $.ajax({
-                url: '/doughnut-chart-data',
+                url: '/horizontal-bar-chart-data',
                 method: 'GET',
                 dataType: 'json',
                 data: {
-                    'country': $("#country").val(),
                     'from': $("#from").val(),
                     'to': $("#to").val(),
                 },
                 success: function(data) {
-                    const ctx = document.getElementById('doughnutChart').getContext('2d');
+                    console.log(data);
+                    const countries = data.countries;
+                    const casesData = data.cases;
+
+                    const ctx = document.getElementById('horizontalBarChart').getContext('2d');
                     if (chart) {
                         chart.destroy();
                     }
                     chart = new Chart(ctx, {
-                        type: 'doughnut',
+                        type: 'bar',
                         data: {
-                            labels: ['Confirmed', 'Recovered', 'Active'],
+                            labels: countries,
                             datasets: [{
-                                data: data.data,
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.7)',
-                                    'rgba(75, 192, 192, 0.7)',
-                                    'rgba(54, 162, 235, 0.7)'
-                                ],
+                                label: 'Cases',
+                                data: casesData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.7)',
                             }]
                         },
                         options: {
@@ -49,7 +48,7 @@
                     });
                 },
                 error: function(error) {
-                    console.error('Error fetching doughnut chart data:', error);
+                    console.error('Error fetching horizontal bar chart data:', error);
                 }
             });
         }

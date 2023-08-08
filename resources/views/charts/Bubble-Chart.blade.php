@@ -1,7 +1,7 @@
 @extends('layout.layout')
 @section('content')
     <div class="container">
-        <x-filters />
+        <x-filters :showContries='true'/>
         <div class="card">
             <div class="card-body">
                 <canvas id="bubbleChart" width="800" height="400"></canvas>

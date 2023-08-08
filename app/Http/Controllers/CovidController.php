@@ -84,4 +84,42 @@ class CovidController extends Controller
             $data->Deaths
         ]]);
     }
+
+    public function getHorizontalBarChartData(Request $request)
+    {
+        $data = Covid::with('country')
+            ->when($request->from, function ($query) use ($request) {
+                return $query->whereDate('date', '>=', $request->from);
+            })
+            ->when($request->to, function ($query) use ($request) {
+                return $query->whereDate('date', '<=', $request->to);
+            })
+            ->limit(30)
+            ->get();
+        $countries = $data->pluck('country.name');
+        $casesData = $data->pluck('Deaths');
+
+        return response()->json([
+            'countries' => $countries,
+            'cases' => $casesData,
+        ]);
+    }
+
+    public function polarAreaChartData(Request $request)
+    {
+        $data = Covid::where('country_id', $request->country)
+            ->when($request->from, function ($query) use ($request) {
+                return $query->whereDate('date', '>=', $request->from);
+            })
+            ->when($request->to, function ($query) use ($request) {
+                return $query->whereDate('date', '<=', $request->to);
+            })
+            ->limit(8)
+            ->get();
+
+        return response()->json([
+            'labels' => $data->pluck('date')->toArray(),
+            'casesData' => $data->pluck('Confirmed')->toArray(),
+        ]);
+    }
 }

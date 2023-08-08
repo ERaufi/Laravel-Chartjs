@@ -1,23 +1,23 @@
 @extends('layout.layout')
+
 @section('content')
     <div class="container">
         <x-filters :showContries='true' />
-
         <div class="card">
             <div class="card-body">
-                {{-- This Canvas is for the Chart --}}
-                <canvas id="barChart" width="800" height="400"></canvas>
+                <canvas id="polarAreaChart" width="800" height="400"></canvas>
             </div>
         </div>
     </div>
 
+
+    <!-- Pie Chart Script -->
     <script>
-        $(".bar_Menu").addClass('active');
         let chart;
 
         function getData() {
             $.ajax({
-                url: '/bar-chart-data',
+                url: '/polar-area-chart-data',
                 method: 'GET',
                 dataType: 'json',
                 data: {
@@ -26,45 +26,38 @@
                     'to': $("#to").val(),
                 },
                 success: function(data) {
-                    const country = data.country;
-                    const countryData = data.countryData;
-
-                    const ctx = document.getElementById('barChart').getContext('2d');
+                    const labels = data.labels;
+                    const casesData = data.casesData;
+                    console.log(data);
+                    const ctx = document.getElementById('polarAreaChart').getContext('2d');
 
                     if (chart) {
                         chart.destroy();
                     }
-
                     chart = new Chart(ctx, {
-                        type: 'bar',
+                        type: 'polarArea',
                         data: {
-                            labels: ['Confirmed', 'Recovered', 'Deaths'],
+                            labels: labels,
                             datasets: [{
-                                label: `COVID-19 Statistics for ${country}`,
-                                data: [countryData.Confirmed, countryData.Recovered, countryData.Deaths],
-                                backgroundColor: ['rgb(255,99,132)', 'rgb(75,192,192)', 'rgb(54,162,235)'],
-                                borderWidth: 1,
+                                data: casesData,
+                                backgroundColor: ['rgba(255, 99, 132, 0.7)', 'rgba(75, 192, 192, 0.7)',
+                                    'rgba(54, 162, 235, 0.7)'
+                                ],
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
                         }
                     });
-
                 },
                 error: function(error) {
-                    console.log(error);
+                    console.error('Error fetching polar area chart data:', error);
                 }
-            })
-        }
+            });
 
-        $(function() {
+        }
+        $(document).ready(function() {
             getData();
         });
     </script>

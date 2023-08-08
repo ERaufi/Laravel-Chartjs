@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Covid extends Model
 {
     use HasFactory;
+
+    public function country()
+    {
+        return $this->belongsTo(Countries::class, 'country_id');
+    }
 }

@@ -21,5 +21,18 @@
                             <div data-i18n="Analytics">Doughnut Chart</div>
                         </a>
                     </li>
+                    <li class="menu-item horizontal_Menu">
+                        <a href="horizontal-bar-chart" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Horizontal Bar Chart</div>
+                        </a>
+                    </li>
+                    <li class="menu-item mixed_Menu">
+                        <a href="polar-area-chart" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">polar-area-chart</div>
+                        </a>
+                    </li>
+
                 </ul>
             </aside>
