@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\addedDataEvent;
 use App\Models\Countries;
 use App\Models\Covid;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -121,5 +123,41 @@ class CovidController extends Controller
             'labels' => $data->pluck('date')->toArray(),
             'casesData' => $data->pluck('Confirmed')->toArray(),
         ]);
+    }
+
+    public function realTimeChart(Request $request)
+    {
+        $data = Covid::where('country_id', $request->country)
+            ->limit(20)
+            ->orderBy('date', 'desc')
+            ->get();
+
+        $country = Countries::where('id', $request->country)->first();
+        return response()->json([
+            'country' => $country->name,
+            'labels' => $data->pluck('date')->toArray(),
+            'Confirmed' => $data->pluck('Confirmed')->toArray(),
+        ]);
+    }
+
+    public function addData()
+    {
+        $date = Carbon::now()->startOfDay();
+
+        for ($i = 1; $i <= 20; $i++) {
+            $item = new Covid();
+            $item->country_id = 29;
+            $item->date = $date->toDateString();
+            $item->Confirmed = rand(0, 200);
+            $item->Deaths = rand(0, 100);
+            $item->Recovered = rand(0, 100);
+            $item->Active = rand(0, 100);
+            $item->save();
+
+            // Increase the date by one day
+            $date->addDay();
+            event(new addedDataEvent('Afghanistan', $item->date, $item->Confirmed));
+            sleep(2);
+        }
     }
 }

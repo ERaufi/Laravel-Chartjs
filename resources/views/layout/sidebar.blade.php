@@ -33,6 +33,12 @@
                             <div data-i18n="Analytics">polar-area-chart</div>
                         </a>
                     </li>
+                    <li class="menu-item mixed_Menu">
+                        <a href="real-time-chart" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Real Time Chart</div>
+                        </a>
+                    </li>
 
                 </ul>
             </aside>
