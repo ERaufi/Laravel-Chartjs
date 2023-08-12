@@ -39,6 +39,12 @@
                             <div data-i18n="Analytics">Real Time Chart</div>
                         </a>
                     </li>
+                    <li class="menu-item scatter-line-chart">
+                        <a href="scatter-line-chart" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                            <div data-i18n="Analytics">Scatter Line Chart</div>
+                        </a>
+                    </li>
 
                 </ul>
             </aside>

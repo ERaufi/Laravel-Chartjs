@@ -160,4 +160,20 @@ class CovidController extends Controller
             sleep(2);
         }
     }
+
+    public function scatterLineChartData(Request $request)
+    {
+        $data = Covid::select('date', 'Confirmed', 'Deaths', 'Recovered', 'Active')
+            ->where('country_id', $request->country)
+            ->when($request->from, function ($query) use ($request) {
+                return $query->whereDate('date', '>=', $request->from);
+            })
+            ->when($request->to, function ($query) use ($request) {
+                return $query->whereDate('date', '<=', $request->to);
+            })
+            ->orderBy('date')
+            ->get();
+
+        return response()->json($data);
+    }
 }

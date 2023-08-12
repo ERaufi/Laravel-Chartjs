@@ -26,6 +26,7 @@ Route::view('/doughnut-chart', 'charts.Doughnut-Chart');
 Route::view('horizontal-bar-chart', 'charts.horizontalBar-Chart');
 Route::view('polar-area-chart', 'charts.PolarArea-Chart');
 Route::view('real-time-chart', 'charts.realTime-Chart');
+Route::view('scatter-line-chart', 'charts.scatterLineChart');
 
 // This Route Returns the data for bar chart AJAX
 Route::controller(CovidController::class)->group(function () {
@@ -35,6 +36,7 @@ Route::controller(CovidController::class)->group(function () {
     Route::get('horizontal-bar-chart-data', 'getHorizontalBarChartData');
     Route::get('polar-area-chart-data', 'polarAreaChartData');
     Route::get('real-time-chart-data', 'realTimeChart');
+    Route::get('scatter-line-chart-data', 'scatterLineChartData');
 
     Route::get('aa', 'addData');
 });

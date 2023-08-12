@@ -68,7 +68,6 @@
         });
 
         setTimeout(() => {
-            console.log('hi');
             window.Echo.channel('addedData')
                 .listen('.App\\Events\\addedDataEvent', (e) => {
                     console.log(e);
